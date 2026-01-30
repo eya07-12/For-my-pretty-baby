@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Animated Lily Garden</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: radial-gradient(circle at bottom, #0b1420, #03070c 60%);
+      overflow: hidden;
+    }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+function resize(){
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+addEventListener('resize', resize);
+resize();
+
+// ---------- Utilities ----------
+const rand = (a,b)=>a+Math.random()*(b-a);
+
+// ---------- Floating Hearts ----------
+class Heart{
+  constructor(){ this.reset(); }
+  reset(){
+    this.x = rand(0, canvas.width);
+    this.y = canvas.height + rand(20, 200);
+    this.s = rand(0.4, 1.2);
+    this.v = rand(0.2, 0.8);
+    this.a = rand(0.002, 0.006);
+    this.r = rand(-0.02, 0.02);
+    this.o = rand(0.4, 0.9);
+  }
+  draw(){
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.r);
+    ctx.scale(this.s, this.s);
+    ctx.globalAlpha = this.o;
+    ctx.fillStyle = '#f19ab7';
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(-10,-10,-25,5,0,25);
+    ctx.bezierCurveTo(25,5,10,-10,0,0);
+    ctx.fill();
+    ctx.restore();
+  }
+  update(){
+    this.y -= this.v;
+    this.x += Math.sin(this.y*0.01)*0.3;
+    this.r += this.a;
+    if(this.y < -40) this.reset();
+    this.draw();
+  }
+}
+const hearts = Array.from({length: 30}, ()=>new Heart());
+
+// ---------- Firefly Dots ----------
+class Firefly{
+  constructor(){ this.reset(); }
+  reset(){
+    this.x = rand(0, canvas.width);
+    this.y = rand(canvas.height*0.5, canvas.height);
+    this.vx = rand(-0.2, 0.2);
+    this.vy = rand(-0.6, -0.2);
+    this.p = rand(0, Math.PI*2);
+  }
+  update(){
+    this.p += 0.05;
+    this.x += this.vx + Math.sin(this.p)*0.2;
+    this.y += this.vy;
+    if(this.y < canvas.height*0.4) this.reset();
+    ctx.fillStyle = 'rgba(255, 230, 120, 0.8)';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 2, 0, Math.PI*2);
+    ctx.fill();
+  }
+}
+const fireflies = Array.from({length: 25}, ()=>new Firefly());
+
+// ---------- Lily Plant ----------
+class Lily{
+  constructor(x){
+    this.x = x;
+    this.baseY = canvas.height - rand(40, 80);
+    this.h = rand(90, 140);
+    this.sway = rand(0, Math.PI*2);
+    this.speed = rand(0.005, 0.01);
+  }
+  petal(a, s){
+    ctx.save();
+    ctx.rotate(a);
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.quadraticCurveTo(10*s,-35*s,0,-70*s);
+    ctx.quadraticCurveTo(-10*s,-35*s,0,0);
+    ctx.fillStyle = '#f7c6d6';
+    ctx.fill();
+    ctx.restore();
+  }
+  draw(){
+    this.sway += this.speed;
+    const lean = Math.sin(this.sway)*6;
+
+    // stem
+    ctx.save();
+    ctx.translate(this.x, this.baseY);
+    ctx.strokeStyle = '#3b8f5a';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.quadraticCurveTo(lean*0.3, -this.h*0.5, lean, -this.h);
+    ctx.stroke();
+
+    // leaves
+    ctx.fillStyle = '#2f7f4d';
+    ctx.beginPath();
+    ctx.ellipse(-8, -this.h*0.5, 14, 6, -0.4, 0, Math.PI*2);
+    ctx.ellipse(10, -this.h*0.65, 16, 7, 0.4, 0, Math.PI*2);
+    ctx.fill();
+
+    // flower
+    ctx.translate(lean, -this.h);
+    for(let i=0;i<6;i++) this.petal((Math.PI*2/6)*i, 1);
+    ctx.fillStyle = '#ffd966';
+    ctx.beginPath();
+    ctx.arc(0,-8,5,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+}
+const lilies = Array.from({length: 5}, (_,i)=>new Lily(canvas.width*(0.25+0.12*i)));
+
+// ---------- Grass ----------
+function grass(){
+  ctx.strokeStyle = '#1e6b44';
+  for(let i=0;i<80;i++){
+    const x = rand(0, canvas.width);
+    const h = rand(30, 70);
+    ctx.beginPath();
+    ctx.moveTo(x, canvas.height);
+    ctx.quadraticCurveTo(x+rand(-10,10), canvas.height-h, x+rand(-6,6), canvas.height-h*1.1);
+    ctx.stroke();
+  }
+}
+
+// ---------- Loop ----------
+function loop(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  hearts.forEach(h=>h.update());
+  fireflies.forEach(f=>f.update());
+  grass();
+  lilies.forEach(l=>l.draw());
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
