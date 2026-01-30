@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Just One Question</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #ffe6f0, #ffffff);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      text-align: center;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 22px;
+      color: #d14c86;
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      position: relative;
+      height: 120px;
+    }
+
+    button {
+      padding: 12px 28px;
+      font-size: 16px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      position: absolute;
+      transition: transform 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .yes {
+      background-color: #ff8fb1;
+      color: white;
+      left: 50%;
+      transform: translateX(-120%);
+    }
+
+    .no {
+      background-color: #ffd6e5;
+      color: #b34b74;
+      left: 50%;
+      transform: translateX(20%);
+    }
+
+    /* Floating lilies */
+    .lily {
+      position: absolute;
+      font-size: 34px;
+      opacity: 0.9;
+      animation: float 10s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      from {
+        transform: translateY(110vh) rotate(0deg);
+      }
+      to {
+        transform: translateY(-10vh) rotate(360deg);
+      }
+    }
+
+    .hint {
+      position: absolute;
+      bottom: 16px;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      color: #b35c84;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Can I tell you something?</h1>
+
+    <div class="buttons">
+      <button class="yes">Yes</button>
+      <button class="no" id="noBtn">No</button>
+    </div>
+  </div>
+
+  <div class="hint">Tap anywhere 🌸</div>
+
+  <script>
+    const noBtn = document.getElementById("noBtn");
+
+    noBtn.addEventListener("click", () => {
+      const maxX = window.innerWidth - noBtn.offsetWidth;
+      const maxY = window.innerHeight - noBtn.offsetHeight;
+
+      noBtn.style.left = Math.random() * maxX + "px";
+      noBtn.style.top = Math.random() * maxY + "px";
+    });
+
+    function createLily() {
+      const lily = document.createElement("div");
+      lily.classList.add("lily");
+      lily.textContent = "🌸"; // pink lily vibe
+      lily.style.left = Math.random() * 100 + "vw";
+      lily.style.animationDuration = 8 + Math.random() * 6 + "s";
+      document.body.appendChild(lily);
+
+      setTimeout(() => {
+        lily.remove();
+      }, 14000);
+    }
+
+    setInterval(createLily, 700);
+
+    document.addEventListener("click", () => {
+      for (let i = 0; i < 4; i++) createLily();
+    });
+  </script>
+
+</body>
+</html>
