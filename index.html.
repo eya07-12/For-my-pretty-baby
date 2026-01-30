@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Just One Question</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For You</title>
 
   <style>
     * {
@@ -12,29 +12,115 @@
 
     body {
       margin: 0;
-      height: 100vh;
-      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      font-family: "Segoe UI", Tahoma, sans-serif;
       background: linear-gradient(180deg, #ffe6f0, #ffffff);
-      overflow: hidden;
+      overflow-x: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
     }
 
-    .container {
+    .card {
+      background: rgba(255, 255, 255, 0.92);
+      max-width: 480px;
+      width: 100%;
+      padding: 26px 24px;
+      border-radius: 22px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
       text-align: center;
+      animation: fadeIn 1.2s ease;
       z-index: 2;
     }
 
-    h1 {
-      font-size: 22px;
-      color: #d14c86;
-      margin-bottom: 20px;
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .buttons {
-      position: relative;
-      height: 120px;
+    p {
+      font-size: 15px;
+      line-height: 1.7;
+      color: #444;
+      margin-bottom: 16px;
+    }
+
+    .signature {
+      margin-top: 18px;
+      font-weight: 600;
+      color: #d14c86;
+    }
+
+    /* Floating lilies */
+    .lily {
+      position: fixed;
+      font-size: 34px;
+      opacity: 0.85;
+      animation: floatUp linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(110vh) rotate(0deg);
+      }
+      to {
+        transform: translateY(-10vh) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="card">
+    <p>
+      I remember the time when I wasn't looking for love. I was focused on getting through my days and figuring things out on my own but then you came into my life and everything felt different and that makes it special. I can't imagine my life without you, sinanay mo kong nanjan ka palagi para sakin.
+    </p>
+
+    <p>
+      I'm very grateful to have you and how perfectly unexpected you are. Loving you wasn’t something I chased, it simply happened, and it feels real in a way nothing else ever did.
+    </p>
+
+    <p>
+      When life isn't being kind to you, always remember na nandito lang ako palagi kasama mo. You don't have to face it alone, we'll face it together, ga. I love you, forever.
+    </p>
+
+    <div class="signature">
+      Love,<br />AD
+    </div>
+  </div>
+
+  <script>
+    function createLily() {
+      const lily = document.createElement("div");
+      lily.className = "lily";
+      lily.textContent = "🌸"; // pink lily vibe
+      lily.style.left = Math.random() * 100 + "vw";
+      lily.style.animationDuration = 10 + Math.random() * 6 + "s";
+      document.body.appendChild(lily);
+
+      setTimeout(() => {
+        lily.remove();
+      }, 16000);
+    }
+
+    setInterval(createLily, 700);
+
+    document.addEventListener("click", () => {
+      for (let i = 0; i < 3; i++) createLily();
+    });
+  </script>
+
+</body>
+</html>      height: 120px;
     }
 
     button {
